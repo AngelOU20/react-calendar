@@ -24,6 +24,7 @@ module.exports = {
     'import/no-absolute-path': 'off',
     semi: 'off',
     'space-before-function-paren': 'off',
+    'multiline-ternary': 'off',
   },
   ignorePatterns: ['.eslintrc.cjs', 'vite.config.js'],
 };
