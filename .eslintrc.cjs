@@ -21,10 +21,11 @@ module.exports = {
   },
   plugins: ['react'],
   rules: {
-    'import/no-absolute-path': 'off',
     semi: 'off',
+    'import/no-absolute-path': 'off',
     'space-before-function-paren': 'off',
     'multiline-ternary': 'off',
+    'comma-dangle': 'off',
   },
   ignorePatterns: ['.eslintrc.cjs', 'vite.config.js'],
 };
