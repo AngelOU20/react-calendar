@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import Modal from 'react-modal';
 import DatePicker, { registerLocale } from 'react-datepicker';
-import { addHours } from 'date-fns';
+import { addHours, differenceInSeconds } from 'date-fns';
 import es from 'date-fns/locale/es';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -24,7 +24,7 @@ Modal.setAppElement('#root');
 
 export const CalendarModal = () => {
   const [isOpen, setIsOpen] = useState(true);
-  const [formValue, setFormValues] = useState({
+  const [formValues, setFormValues] = useState({
     title: '',
     notes: '',
     start: new Date(),
@@ -33,14 +33,14 @@ export const CalendarModal = () => {
 
   const onInputChange = ({ target }) => {
     setFormValues({
-      ...formValue,
+      ...formValues,
       [target.name]: target.value,
     });
   };
 
   const onDateChanged = (event, changing) => {
     setFormValues({
-      ...formValue,
+      ...formValues,
       [changing]: event,
     });
   };
@@ -48,6 +48,22 @@ export const CalendarModal = () => {
   const onCloseModal = () => {
     console.log('cerrando modal');
     setIsOpen(false);
+  };
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+
+    const difference = differenceInSeconds(formValues.end, formValues.start);
+
+    if (isNaN(difference) || difference <= 0) {
+      return console.log(difference, 'Error en fechas');
+    }
+
+    if (formValues.title.length <= 0) return;
+
+    console.log(formValues);
+
+    // TODO: cerrar modal, remover errores en pantalla
   };
 
   return (
@@ -61,12 +77,12 @@ export const CalendarModal = () => {
     >
       <h1> Nuevo evento </h1>
       <hr />
-      <form className="container">
+      <form className="container" onSubmit={onSubmit}>
         <div className="form-group mb-2">
           <label className="d-block">Fecha y hora inicio</label>
           <DatePicker
             className="form-control"
-            selected={formValue.start}
+            selected={formValues.start}
             onChange={(event) => onDateChanged(event, 'start')}
             dateFormat="Pp"
             showTimeSelect
@@ -78,9 +94,9 @@ export const CalendarModal = () => {
         <div className="form-group mb-2">
           <label className="d-block">Fecha y hora fin</label>
           <DatePicker
-            minDate={formValue.start}
+            minDate={formValues.start}
             className="form-control"
-            selected={formValue.end}
+            selected={formValues.end}
             onChange={(event) => onDateChanged(event, 'end')}
             dateFormat="Pp"
             showTimeSelect
@@ -98,7 +114,7 @@ export const CalendarModal = () => {
             placeholder="Título del evento"
             name="title"
             autoComplete="off"
-            value={formValue.title}
+            value={formValues.title}
             onChange={onInputChange}
           />
           <small id="emailHelp" className="form-text text-muted">
@@ -113,7 +129,7 @@ export const CalendarModal = () => {
             placeholder="Notas"
             rows="5"
             name="notes"
-            value={formValue.notes}
+            value={formValues.notes}
             onChange={onInputChange}
           ></textarea>
           <small id="emailHelp" className="form-text text-muted">
