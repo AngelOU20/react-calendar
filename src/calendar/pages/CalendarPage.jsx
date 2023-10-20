@@ -6,6 +6,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import { Navbar, CalendarEvent, CalendarModal } from '../';
 import { localizer, getMessagesEs } from '../../helpers';
+import { useUiStore } from '../../hooks/useUiStore';
 
 const events = [
   {
@@ -39,8 +40,11 @@ export const CalendarPage = () => {
     };
   };
 
+  // Custom Hook
+  const { openDateModal } = useUiStore();
+
   const onDoubleClick = (event) => {
-    console.log({ doubleClick: event });
+    openDateModal();
   };
 
   const onSelect = (event) => {
