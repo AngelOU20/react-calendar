@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import Modal from 'react-modal';
 
@@ -11,7 +11,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { useUiStore } from '../../hooks/useUiStore';
+import { useUiStore, useCalendarStore } from '../../hooks';
 
 registerLocale('es', es);
 
@@ -33,22 +33,30 @@ export const CalendarModal = () => {
 
   const [formValues, setFormValues] = useState({
     title: '',
-    notes: '',
+    note: '',
     start: new Date(),
     end: addHours(new Date(), 2),
   });
 
   // Custom Hook
   const { isDateModalOpen, closeDateModal } = useUiStore();
+  const { activeEvent } = useCalendarStore();
 
-  // Validación
+  // Validación con useMemo
   const titleClass = useMemo(() => {
     if (!formSubmitted) return '';
 
     return formValues.title.length > 0 ? 'is-valid' : 'is-invalid';
   }, [formValues.title, formSubmitted]);
 
-  const onInputChange = ({ target }) => {
+  // useEffect
+  useEffect(() => {
+    if (activeEvent !== null) {
+      setFormValues({ ...activeEvent });
+    }
+  }, [activeEvent]);
+
+  const onInputChanged = ({ target }) => {
     setFormValues({
       ...formValues,
       [target.name]: target.value,
@@ -134,7 +142,7 @@ export const CalendarModal = () => {
             name="title"
             autoComplete="off"
             value={formValues.title}
-            onChange={onInputChange}
+            onChange={onInputChanged}
           />
           <small id="emailHelp" className="form-text text-muted">
             Una descripción corta
@@ -148,8 +156,8 @@ export const CalendarModal = () => {
             placeholder="Notas"
             rows="5"
             name="notes"
-            value={formValues.notes}
-            onChange={onInputChange}
+            value={formValues.note}
+            onChange={onInputChanged}
           ></textarea>
           <small id="emailHelp" className="form-text text-muted">
             Información adicional
