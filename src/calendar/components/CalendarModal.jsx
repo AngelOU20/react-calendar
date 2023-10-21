@@ -40,7 +40,7 @@ export const CalendarModal = () => {
 
   // Custom Hook
   const { isDateModalOpen, closeDateModal } = useUiStore();
-  const { activeEvent } = useCalendarStore();
+  const { activeEvent, startSavingEvent } = useCalendarStore();
 
   // Validación con useMemo
   const titleClass = useMemo(() => {
@@ -74,7 +74,7 @@ export const CalendarModal = () => {
     closeDateModal();
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
     setFormSubmitted(true);
 
@@ -90,7 +90,9 @@ export const CalendarModal = () => {
     console.log(formValues);
 
     // TODO: cerrar modal, remover errores en pantalla
+    await startSavingEvent(formValues);
     onCloseModal();
+    setFormSubmitted(false);
   };
 
   return (
@@ -155,7 +157,7 @@ export const CalendarModal = () => {
             className="form-control"
             placeholder="Notas"
             rows="5"
-            name="notes"
+            name="note"
             value={formValues.note}
             onChange={onInputChanged}
           ></textarea>
