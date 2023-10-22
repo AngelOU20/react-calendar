@@ -14,7 +14,7 @@ export const FabAddNew = () => {
       bgColor: '#fafafa',
       user: {
         id: '123',
-        name: 'Julio',
+        name: 'Julio Angel',
       },
     });
     openDateModal();
