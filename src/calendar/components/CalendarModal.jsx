@@ -40,7 +40,8 @@ export const CalendarModal = () => {
 
   // Custom Hook
   const { isDateModalOpen, closeDateModal } = useUiStore();
-  const { activeEvent, startSavingEvent } = useCalendarStore();
+  const { activeEvent, startSavingEvent, clearEventActive } =
+    useCalendarStore();
 
   // Validación con useMemo
   const titleClass = useMemo(() => {
@@ -72,6 +73,7 @@ export const CalendarModal = () => {
 
   const onCloseModal = () => {
     closeDateModal();
+    clearEventActive();
   };
 
   const onSubmit = async (event) => {
@@ -86,8 +88,6 @@ export const CalendarModal = () => {
     }
 
     if (formValues.title.length <= 0) return;
-
-    console.log(formValues);
 
     // TODO: cerrar modal, remover errores en pantalla
     await startSavingEvent(formValues);
