@@ -3,8 +3,8 @@ import calendarApi from '../api/calendarApi';
 import { clearErrorMessage, onChecking, onLogin, onLogout } from '../store';
 
 export const useAuthStore = () => {
-  const dispatch = useDispatch();
   const { status, user, errorMessage } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const startLogin = async ({ email, password }) => {
     dispatch(onChecking());
@@ -47,6 +47,23 @@ export const useAuthStore = () => {
     }
   };
 
+  // Revisar el token
+  const checkAuthToken = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return dispatch(onLogout());
+
+    try {
+      const { data } = await calendarApi.get('/auth/renew');
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('token-init-date', new Date().getTime());
+
+      dispatch(onLogin({ name: data.name, uid: data.uid }));
+    } catch (error) {
+      localStorage.clear();
+      dispatch(onLogout());
+    }
+  };
+
   return {
     // Propiedades
     status,
@@ -56,5 +73,6 @@ export const useAuthStore = () => {
     // Métodos
     startLogin,
     startRegister,
+    checkAuthToken,
   };
 };
