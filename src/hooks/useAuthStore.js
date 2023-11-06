@@ -38,7 +38,9 @@ export const useAuthStore = () => {
     } catch (error) {
       const { data } = error.response;
 
-      dispatch(onLogout(data?.msg || '---'));
+      const messages = data?.msg || Object.values(data?.errors)[0].msg;
+
+      dispatch(onLogout(messages));
       setTimeout(() => {
         dispatch(clearErrorMessage());
       }, 10);
