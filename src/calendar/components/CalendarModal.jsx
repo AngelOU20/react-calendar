@@ -33,7 +33,7 @@ export const CalendarModal = () => {
 
   const [formValues, setFormValues] = useState({
     title: '',
-    note: '',
+    notes: '',
     start: new Date(),
     end: addHours(new Date(), 2),
   });
@@ -157,8 +157,8 @@ export const CalendarModal = () => {
             className="form-control"
             placeholder="Notas"
             rows="5"
-            name="note"
-            value={formValues.note}
+            name="notes"
+            value={formValues.notes}
             onChange={onInputChanged}
           ></textarea>
           <small id="emailHelp" className="form-text text-muted">
