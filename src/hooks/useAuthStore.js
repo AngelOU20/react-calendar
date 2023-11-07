@@ -64,6 +64,15 @@ export const useAuthStore = () => {
     }
   };
 
+  // Cerrar Sesión
+  const startLogout = () => {
+    // localStorage.clear();
+    localStorage.removeItem('token');
+    localStorage.removeItem('token-init-date');
+    localStorage.removeItem('lastView');
+    dispatch(onLogout());
+  };
+
   return {
     // Propiedades
     status,
@@ -74,5 +83,6 @@ export const useAuthStore = () => {
     startLogin,
     startRegister,
     checkAuthToken,
+    startLogout,
   };
 };
